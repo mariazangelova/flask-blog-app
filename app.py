@@ -178,8 +178,13 @@ def register():
 def posts():
    return render_template("index.html")
 
-@app.route('/post', methods=["GET", "POST"])
-def post():
+@app.route('/post/<id>')
+def post(id):
+    post = Post.query.filter_by(id=id).all()
+    return render_template("post.html", post=post[0])
+
+@app.route('/add-post', methods=["GET", "POST"])
+def add_post():
     if request.method == "POST":
         try:
             # Store post data
@@ -198,6 +203,7 @@ def post():
         return render_template("post.html")
     else:
         return render_template("post_form.html")
+
 
 # # Create a router for displaying a list of signed up users for an easy check
 @app.route('/users')
