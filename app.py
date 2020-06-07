@@ -175,8 +175,29 @@ def register():
         return render_template("register.html")
 
 @app.route('/posts')
-def something():
+def posts():
    return render_template("index.html")
+
+@app.route('/post', methods=["GET", "POST"])
+def post():
+    if request.method == "POST":
+        try:
+            # Store post data
+            title = request.form.get("title")
+            subtitle = request.form.get("subtitle")
+            content = request.form.get("content")
+            author = session.get("user_id")
+
+            # Create a new post
+            post = Post(title=title, subtitle=subtitle, content=content, author=author, date_posted=datetime.now())
+            db.session.add(post)
+            db.session.commit()
+        except:
+            error = "Something went wrong."
+            return render_template("post_form.html", error=error)
+        return render_template("post.html")
+    else:
+        return render_template("post_form.html")
 
 # # Create a router for displaying a list of signed up users for an easy check
 @app.route('/users')

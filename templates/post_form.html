@@ -1,0 +1,46 @@
+{% extends "layout.html" %} {% block main %} {% if error %}
+<p class="error"><strong>Error:</strong> {{ error }}</p>
+{% endif %}
+<h1>ADD A POST</h1>
+<form action="/post" method="post">
+  <div class="form-group">
+    <input
+      autocomplete="off"
+      autofocus
+      class="form-control"
+      name="title"
+      placeholder="Title"
+      type="text"
+      style="width: 500px;"
+    />
+  </div>
+  <div class="form-group">
+    <input
+      class="form-control"
+      name="subtitle"
+      placeholder="Subtitle"
+      type="text"
+      style="width: 500px;"
+    />
+  </div>
+  <div class="form-group">
+    <textarea
+      class="form-control"
+      name="content"
+      placeholder="Write content here..."
+      style="width: 500px; height: 500px;"
+    ></textarea>
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlSelect1">Select something:</label>
+    <select class="form-control" id="exampleFormControlSelect1">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+    </select>
+  </div>
+  <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+{% endblock %}
