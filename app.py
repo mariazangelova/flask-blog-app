@@ -1,6 +1,9 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy  
+from sqlalchemy import join
+from sqlalchemy import desc
+
 
 import re
 from datetime import datetime
@@ -58,7 +61,8 @@ Session(app)
 @app.route("/")
 @login_required
 def index():
-    return render_template("index.html")
+    posts = Post.query.join(User).order_by(desc(Post.date_posted)).all()
+    return render_template("index.html", posts=posts)
 
 @app.route("/about")
 @login_required
@@ -200,7 +204,7 @@ def add_post():
         except:
             error = "Something went wrong."
             return render_template("post_form.html", error=error)
-        return render_template("post.html")
+        return render_template("post.html", post=post)
     else:
         return render_template("post_form.html")
 
