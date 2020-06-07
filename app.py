@@ -86,13 +86,13 @@ def login():
         # Query database for username
         email=request.form.get("email")
         user = User.query.filter_by(email=email).all()
-        user_id = user[0].id
         # Ensure username exists and password is correct
         if len(user) != 1 or not check_password_hash(user[0].password, request.form.get("password")):
-            print("invalid username and/or password")
+            error="No such user or wrong password."
+            return render_template("login.html", error=error)
 
         # Remember which user has logged in
-        session["user_id"] = user_id
+        session["user_id"] = user[0].id
 
         # Redirect user to home page
         return redirect("/")
@@ -165,7 +165,7 @@ def register():
         db.session.commit()
       except:
          error = "Something went wrong"
-         return render_template("login.html", error=error)
+         return render_template("register.html", error=error)
       finally:
          flash('You successfully signed up')
          return render_template("index.html")
