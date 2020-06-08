@@ -59,13 +59,16 @@ Session(app)
 
 
 @app.route("/")
-@login_required
 def index():
     posts = Post.query.join(User).order_by(desc(Post.date_posted)).all()
     return render_template("index.html", posts=posts)
 
+@app.route('/posts')
+def posts():
+    posts = Post.query.join(User).order_by(desc(Post.date_posted)).all()
+    return render_template("index.html", posts=posts)
+
 @app.route("/about")
-@login_required
 def about():
     return render_template("about.html")
 
@@ -178,16 +181,17 @@ def register():
     else:
         return render_template("register.html")
 
-@app.route('/posts')
-def posts():
-   return render_template("index.html")
+
 
 @app.route('/post/<id>')
+@login_required
 def post(id):
-    post = Post.query.filter_by(id=id).all()
-    return render_template("post.html", post=post[0])
+    post = Post.query.filter_by(id=id).first()
+    author = User.query.filter_by(id=post.author).first()
+    return render_template("post.html", post=post, author=author)
 
 @app.route('/add-post', methods=["GET", "POST"])
+@login_required
 def add_post():
     if request.method == "POST":
         try:
@@ -204,13 +208,15 @@ def add_post():
         except:
             error = "Something went wrong."
             return render_template("post_form.html", error=error)
-        return render_template("post.html", post=post)
+        author_data = User.query.filter_by(id=post.author).first()
+        return render_template("post.html", post=post, author=author_data)
     else:
         return render_template("post_form.html")
 
 
 # # Create a router for displaying a list of signed up users for an easy check
 @app.route('/users')
+@login_required
 def users():
     users = User.query.all()
     print(users)
