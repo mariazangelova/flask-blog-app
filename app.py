@@ -44,12 +44,14 @@ Session(app)
 @app.route("/")
 def index():
     posts = Post.query.join(User).order_by(desc(Post.date_posted)).all()
-    return render_template("index.html", posts=posts)
+    categories = Category.query.all()
+    return render_template("index.html", posts=posts, categories=categories)
 
 @app.route('/posts')
 def posts():
     posts = Post.query.join(User).order_by(desc(Post.date_posted)).all()
-    return render_template("index.html", posts=posts)
+    categories = Category.query.all()
+    return render_template("index.html", posts=posts, categories=categories)
 
 @app.route("/about")
 def about():
