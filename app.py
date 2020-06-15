@@ -196,7 +196,8 @@ def add_post():
         author_data = User.query.filter_by(id=post.author).first()
         return render_template("post.html", post=post, author=author_data)
     else:
-        return render_template("post_form.html")
+        categories = Category.query.all()
+        return render_template("post_form.html", categoties=categories)
 
 
 # # Create a router for displaying a list of signed up users for an easy check
