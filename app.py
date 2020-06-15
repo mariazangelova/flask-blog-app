@@ -13,7 +13,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helper import login_required
-#from models import User, Post
+from models import db, User, Post, Category
 
 app = Flask(__name__)
 
@@ -24,24 +24,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 #app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 #app.config['SECRET_KEY'] = "secret key"
 
-db = SQLAlchemy(app)  
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
-    email = db.Column(db.String(50))
-    password = db.Column(db.String(20))
-    registered = db.Column(db.DateTime)
-    posts = db.relationship("Post", backref='user')
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50))
-    subtitle = db.Column(db.String(50))
-    date_posted = db.Column(db.DateTime)
-    content = db.Column(db.Text)
-    author = db.Column(db.Integer, db.ForeignKey("user.id"))
-
+db.init_app(app)
 
 # Ensure responses aren't cached
 @app.after_request

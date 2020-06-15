@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from app import db
+# from app import db
+
+db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,7 +20,7 @@ class User(db.Model):
         self.registered = registered
         self.posts = posts
     def __repr__(self):
-        return self.first_name
+        return '<User %r>' % self.first_name
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,6 +29,17 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime)
     content = db.Column(db.Text)
     author = db.Column(db.Integer, db.ForeignKey("user.id"))
+    categories = db.relationship("Category", secondary='categories')
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50))
+    # posts = db.relationship("Post", secondary='categories')
+
+association_table = db.Table('categories', db.Model.metadata,
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+    db.Column('category_id', db.Integer, db.ForeignKey('category.id'))
+)
 
 if __name__ == "__main__":
 
