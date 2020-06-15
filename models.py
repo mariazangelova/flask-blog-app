@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-# from app import db
+#from app import db
 
 db = SQLAlchemy()
 
@@ -29,14 +29,14 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime)
     content = db.Column(db.Text)
     author = db.Column(db.Integer, db.ForeignKey("user.id"))
-    categories = db.relationship("Category", secondary='categories')
+    categories = db.relationship("Category", secondary='categories', backref=db.backref('posts', lazy='dynamic'))
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50))
     # posts = db.relationship("Post", secondary='categories')
 
-association_table = db.Table('categories', db.Model.metadata,
+categories = db.Table('categories', db.Model.metadata,
     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
     db.Column('category_id', db.Integer, db.ForeignKey('category.id'))
 )

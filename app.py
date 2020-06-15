@@ -13,7 +13,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helper import login_required
-from models import db, User, Post, Category
+from models import db, User, Post, Category, categories
 
 app = Flask(__name__)
 
@@ -23,6 +23,8 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 #app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 #app.config['SECRET_KEY'] = "secret key"
+
+#db = SQLAlchemy(app)
 
 db.init_app(app)
 
@@ -44,12 +46,14 @@ Session(app)
 @app.route("/")
 def index():
     posts = Post.query.join(User).order_by(desc(Post.date_posted)).all()
-    return render_template("index.html", posts=posts)
+    categories = Category.query.all()
+    return render_template("index.html", posts=posts, categories=categories)
 
 @app.route('/posts')
 def posts():
     posts = Post.query.join(User).order_by(desc(Post.date_posted)).all()
-    return render_template("index.html", posts=posts)
+    categories = Category.query.all()
+    return render_template("index.html", posts=posts, categories=categories)
 
 @app.route("/about")
 def about():
@@ -183,10 +187,15 @@ def add_post():
             subtitle = request.form.get("subtitle")
             content = request.form.get("content")
             author = session.get("user_id")
+            cats = request.form.getlist("category")
 
-            # Create a new post
+            # Create a new post with categories
             post = Post(title=title, subtitle=subtitle, content=content, author=author, date_posted=datetime.now())
             db.session.add(post)
+            db.session.flush()
+            db.session.refresh(post)
+            for cat in cats:
+                db.session.connection().execute(categories.insert().values(post_id=post.id, category_id=cat))
             db.session.commit()
         except:
             error = "Something went wrong."
@@ -194,7 +203,11 @@ def add_post():
         author_data = User.query.filter_by(id=post.author).first()
         return render_template("post.html", post=post, author=author_data)
     else:
-        return render_template("post_form.html")
+        # category = Category(title="music")
+        # db.session.add(category)
+        # db.session.commit()
+        categ = Category.query.all()
+        return render_template("post_form.html", categories=categ)
 
 
 # # Create a router for displaying a list of signed up users for an easy check
