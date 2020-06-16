@@ -72,9 +72,16 @@
         <div class="card-body">
           <ul class="list-unstyled mb-0">
             {%for category in categories%}
-            <li>
-              <a href="#">{{category.title}}</a>
-            </li>
+            <form action="/posts/{{category.title}}" method="post">
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  name="category"
+                  type="submit"
+                  value="{{category.title}}"
+                />
+              </div>
+            </form>
             {%endfor%}
           </ul>
         </div>
@@ -90,7 +97,5 @@
       </div>
     </div>
   </div>
-  <!-- /.row -->
 </div>
-<!-- /.container -->
 {% endblock %}
