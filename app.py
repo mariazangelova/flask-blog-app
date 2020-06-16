@@ -55,6 +55,12 @@ def posts():
     categories = Category.query.all()
     return render_template("index.html", posts=posts, categories=categories)
 
+@app.route("/posts/<category>", methods=["GET", "POST"])
+def categories(category):
+    posts = Post.query.join(User).filter(Post.categories.any(title=category)).order_by(desc(Post.date_posted))
+    allcategories = Category.query.all()
+    return render_template("index.html", posts=posts, categories=allcategories)
+
 @app.route("/about")
 def about():
     return render_template("about.html")
@@ -210,7 +216,7 @@ def add_post():
         return render_template("post_form.html", categories=categ)
 
 
-# # Create a router for displaying a list of signed up users for an easy check
+# Create a router for displaying a list of signed up users for an easy check
 @app.route('/users')
 @login_required
 def users():
