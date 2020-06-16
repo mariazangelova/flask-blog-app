@@ -36,7 +36,7 @@ class Category(db.Model):
     title = db.Column(db.String(50))
     # posts = db.relationship("Post", secondary='categories')
 
-categories = db.Table('categories', db.Model.metadata,
+categories_table = db.Table('categories', db.Model.metadata,
     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
     db.Column('category_id', db.Integer, db.ForeignKey('category.id'))
 )

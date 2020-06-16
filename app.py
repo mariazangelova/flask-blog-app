@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import join
 from sqlalchemy import desc
 
-
 import re
 from datetime import datetime
 
@@ -13,7 +12,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helper import login_required
-from models import db, User, Post, Category, categories
+from models import db, User, Post, Category, categories_table
 
 app = Flask(__name__)
 
@@ -60,6 +59,15 @@ def categories(category):
     posts = Post.query.join(User).filter(Post.categories.any(title=category)).order_by(desc(Post.date_posted))
     allcategories = Category.query.all()
     return render_template("index.html", posts=posts, categories=allcategories)
+
+@app.route("/myprofile", methods=["GET", "POST"])
+def profile():
+    user_id = session.get("user_id")
+    user = User.query.filter_by(id=user_id).first()
+    print(user)
+    posts = Post.query.join(User).filter(Post.user.has(id=user_id)).order_by(desc(Post.date_posted))
+    allcategories = Category.query.all()
+    return render_template("profile.html", user=user, posts=posts, categories=allcategories)
 
 @app.route("/about")
 def about():
@@ -183,6 +191,16 @@ def post(id):
     author = User.query.filter_by(id=post.author).first()
     return render_template("post.html", post=post, author=author)
 
+@app.route('/post/delete/<id>')
+@login_required
+def delete_post(id):
+    post = db.session.query(Post).get(id)
+    post.categories = []
+    #Post.query.filter_by(id=id).delete()
+    db.session.delete(post)
+    db.session.commit()
+    return redirect("/myprofile")
+
 @app.route('/add-post', methods=["GET", "POST"])
 @login_required
 def add_post():
@@ -201,7 +219,7 @@ def add_post():
             db.session.flush()
             db.session.refresh(post)
             for cat in cats:
-                db.session.connection().execute(categories.insert().values(post_id=post.id, category_id=cat))
+                db.session.connection().execute(categories_table.insert().values(post_id=post.id, category_id=cat))
             db.session.commit()
         except:
             error = "Something went wrong."
@@ -209,7 +227,7 @@ def add_post():
         author_data = User.query.filter_by(id=post.author).first()
         return render_template("post.html", post=post, author=author_data)
     else:
-        # category = Category(title="music")
+        # category = Category(title="culture")
         # db.session.add(category)
         # db.session.commit()
         categ = Category.query.all()
