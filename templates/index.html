@@ -9,15 +9,11 @@
       <!-- Blog Post -->
       {%for post in posts%}
       <div class="card mb-4">
-        <img
-          class="card-img-top"
-          src="http://placehold.it/750x300"
-          alt="Card image cap"
-        />
-        <div class="card-body">
+        <div class="card-body" style="text-align: left;">
           <h2 class="card-title">{{post.title}}</h2>
+          <h4 class="card-title">{{post.subtitle}}</h4>
           <p class="card-text">
-            {{post.content}}
+            {{post.content[:200]}}...
           </p>
           <a href="/post/{{post.id}}" class="btn btn-primary"
             >Read More &rarr;</a
@@ -30,7 +26,7 @@
           {%endfor%}
         </div>
         <div class="card-footer text-muted">
-          Posted: {{post.date_posted}} by
+          Posted: {{post.date_posted.strftime("%c")}} by
           <a href="#">{{post.user.first_name}} {{post.user.last_name}}</a>
         </div>
       </div>
@@ -89,10 +85,10 @@
 
       <!-- Side Widget -->
       <div class="card my-4">
-        <h5 class="card-header">Side Widget</h5>
+        <h5 class="card-header">Open to ideas</h5>
         <div class="card-body">
-          You can put anything you want inside of these side widgets. They are
-          easy to use, and feature the new Bootstrap 4 card containers!
+          Here you can write anything you wish. In case something is missing, we
+          can add it.
         </div>
       </div>
     </div>

@@ -227,9 +227,10 @@ def add_post():
         author_data = User.query.filter_by(id=post.author).first()
         return render_template("post.html", post=post, author=author_data)
     else:
-        # category = Category(title="culture")
+        # category = Category(title="technology")
         # db.session.add(category)
-        # db.session.commit()
+        #Category.query.filter_by(id=4).delete()
+        #db.session.commit()
         categ = Category.query.all()
         return render_template("post_form.html", categories=categ)
 
