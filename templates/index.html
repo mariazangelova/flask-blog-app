@@ -9,15 +9,11 @@
       <!-- Blog Post -->
       {%for post in posts%}
       <div class="card mb-4">
-        <img
-          class="card-img-top"
-          src="http://placehold.it/750x300"
-          alt="Card image cap"
-        />
         <div class="card-body">
           <h2 class="card-title">{{post.title}}</h2>
+          <h3 class="card-title">{{post.subtitle}}</h3>
           <p class="card-text">
-            {{post.content}}
+            {{post.content[:200]}}...
           </p>
           <a href="/post/{{post.id}}" class="btn btn-primary"
             >Read More &rarr;</a
@@ -30,7 +26,7 @@
           {%endfor%}
         </div>
         <div class="card-footer text-muted">
-          Posted: {{post.date_posted}} by
+          Posted: {{post.date_posted.strftime("%c")}} by
           <a href="#">{{post.user.first_name}} {{post.user.last_name}}</a>
         </div>
       </div>
