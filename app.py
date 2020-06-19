@@ -234,6 +234,14 @@ def add_post():
         categ = Category.query.all()
         return render_template("post_form.html", categories=categ)
 
+@app.route('/search', methods=["GET", "POST"])
+def search():
+    word = request.form.get("word")
+    posts = Post.query.filter(Post.content.contains(word)).all()
+    categories = Category.query.all()
+    return render_template("index.html", posts=posts, categories=categories)
+
+
 
 # Create a router for displaying a list of signed up users for an easy check
 @app.route('/users')
