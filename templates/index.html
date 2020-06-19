@@ -49,16 +49,17 @@
       <div class="card my-4">
         <h5 class="card-header">Search</h5>
         <div class="card-body">
-          <div class="input-group">
+          <form action="/search" method="post">
             <input
               type="text"
               class="form-control"
               placeholder="Search for..."
+              name="word"
             />
             <span class="input-group-btn">
-              <button class="btn btn-secondary" type="button">Go!</button>
+              <button class="btn btn-secondary" type="submit">Go!</button>
             </span>
-          </div>
+          </form>
         </div>
       </div>
 
