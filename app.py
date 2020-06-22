@@ -181,8 +181,9 @@ def register():
          error = "Something went wrong"
          return render_template("register.html", error=error)
       finally:
+         session["user_id"] = user.id
          flash('You successfully signed up')
-         return render_template("index.html")
+         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
