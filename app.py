@@ -242,7 +242,6 @@ def search():
     return render_template("index.html", posts=posts, categories=categories)
 
 
-
 # Create a router for displaying a list of signed up users for an easy check
 @app.route('/users')
 @login_required
