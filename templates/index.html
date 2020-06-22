@@ -57,15 +57,22 @@
         <h5 class="card-header">Search</h5>
         <div class="card-body">
           <form action="/search" method="post">
+            <div class="input-group-prepend">
             <input
               type="text"
               class="form-control"
               placeholder="Search for..."
               name="word"
             />
-            <span class="input-group-btn">
-              <button class="btn btn-secondary" type="submit">Go!</button>
-            </span>
+            <button
+              class="btn btn-secondary"
+              type="submit"
+              style="margin-left: 10px;"
+            >
+              Go!
+            </button>
+            </div>
+            </form>
           </form>
         </div>
       </div>
