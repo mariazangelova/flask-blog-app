@@ -58,7 +58,7 @@ def posts():
 def categories(category):
     posts = Post.query.join(User).filter(Post.categories.any(title=category)).order_by(desc(Post.date_posted))
     allcategories = Category.query.all()
-    return render_template("index.html", posts=posts, categories=allcategories)
+    return render_template("index.html", posts=posts, categories=allcategories, category=category)
 
 @app.route("/myprofile", methods=["GET", "POST"])
 def profile():

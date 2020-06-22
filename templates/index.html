@@ -3,7 +3,9 @@
   <div class="row">
     <div class="col-md-8">
       <h1 class="my-4">
-        Latest Posts
+        Latest Posts       {% if category %}
+        <span>: {{category}}</span>
+        {% endif %}
       </h1>
       {% if word %}
       <div style="text-align: left; margin-bottom: 10px;">
@@ -81,7 +83,8 @@
       <div class="card my-4">
         <h5 class="card-header">Categories</h5>
         <div class="card-body">
-          <ul class="list-unstyled mb-0">
+          <a href="/" class="form-control" style="margin-bottom: 15px;"
+          >all</a>
             {%for category in categories%}
             <form action="/posts/{{category.title}}" method="post">
               <div class="form-group">
@@ -94,7 +97,6 @@
               </div>
             </form>
             {%endfor%}
-          </ul>
         </div>
       </div>
 
