@@ -3,11 +3,18 @@
   <div class="row">
     <div class="col-md-8">
       <h1 class="my-4">
-        Latest Posts
+        Latest Posts       {% if category %}
+        <span>: {{category}}</span>
+        {% endif %}
       </h1>
-
+      {% if word %}
+      <div style="text-align: left; margin-bottom: 10px;">
+        <h5>Results with <strong>{{word}}:</strong></h5>
+        <a href="/">Clear search</a>
+      </div>
+      {% endif %}
       <!-- Blog Post -->
-      {%for post in posts%}
+      {% block content %} {% if posts %} {%for post in posts%}
       <div class="card mb-4">
         <div class="card-body" style="text-align: left;">
           <h2 class="card-title">{{post.title}}</h2>
@@ -30,7 +37,9 @@
           <a href="#">{{post.user.first_name}} {{post.user.last_name}}</a>
         </div>
       </div>
-      {%endfor%}
+      {%endfor%} {% else %}
+      <h1>Sorry, no posts were found.</h1>
+      {% endif %} {% endblock content %}
 
       <!-- Pagination -->
       <ul class="pagination justify-content-center mb-4">
@@ -50,15 +59,22 @@
         <h5 class="card-header">Search</h5>
         <div class="card-body">
           <form action="/search" method="post">
+            <div class="input-group-prepend">
             <input
               type="text"
               class="form-control"
               placeholder="Search for..."
               name="word"
             />
-            <span class="input-group-btn">
-              <button class="btn btn-secondary" type="submit">Go!</button>
-            </span>
+            <button
+              class="btn btn-secondary"
+              type="submit"
+              style="margin-left: 10px;"
+            >
+              Go!
+            </button>
+            </div>
+            </form>
           </form>
         </div>
       </div>
@@ -67,7 +83,8 @@
       <div class="card my-4">
         <h5 class="card-header">Categories</h5>
         <div class="card-body">
-          <ul class="list-unstyled mb-0">
+          <a href="/" class="form-control" style="margin-bottom: 15px;"
+          >all</a>
             {%for category in categories%}
             <form action="/posts/{{category.title}}" method="post">
               <div class="form-group">
@@ -80,7 +97,6 @@
               </div>
             </form>
             {%endfor%}
-          </ul>
         </div>
       </div>
 
