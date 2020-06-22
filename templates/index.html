@@ -5,7 +5,12 @@
       <h1 class="my-4">
         Latest Posts
       </h1>
-
+      {% if word %}
+      <div style="text-align: left; margin-bottom: 10px;">
+        <h5>Results with <strong>{{word}}:</strong></h5>
+        <a href="/">Clear search</a>
+      </div>
+      {% endif %}
       <!-- Blog Post -->
       {% block content %} {% if posts %} {%for post in posts%}
       <div class="card mb-4">
