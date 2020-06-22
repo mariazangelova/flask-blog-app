@@ -41,22 +41,28 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
-@app.route("/")
-def index():
-    posts = Post.query.join(User).order_by(desc(Post.date_posted)).all()
-    categories = Category.query.all()
-    return render_template("index.html", posts=posts, categories=categories)
-
+@app.route("/", methods=['GET'])
 @app.route('/posts')
-def posts():
-    posts = Post.query.join(User).order_by(desc(Post.date_posted)).all()
+@app.route("/<int:page>", methods=['GET'])
+def index(page=1):
+    #posts = Post.query.join(User).order_by(desc(Post.date_posted)).all() 
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page,per_page=5,error_out=False)
     categories = Category.query.all()
     return render_template("index.html", posts=posts, categories=categories)
 
+@app.route('/search', methods=["GET", "POST"])
+@app.route('/search/<int:page>', methods=["GET", "POST"])
+def search(page=1):
+    word = request.form.get("word")
+    posts = Post.query.filter(Post.content.contains(word)).paginate(page,per_page=5,error_out=False)
+    categories = Category.query.all()
+    print(posts)
+    return render_template("index.html", posts=posts, categories=categories, word=word)
+
+@app.route("/posts/<category>/<int:page>", methods=["GET", "POST"])
 @app.route("/posts/<category>", methods=["GET", "POST"])
-def categories(category):
-    posts = Post.query.join(User).filter(Post.categories.any(title=category)).order_by(desc(Post.date_posted))
+def categories(category, page=1):
+    posts = Post.query.join(User).filter(Post.categories.any(title=category)).order_by(desc(Post.date_posted)).paginate(page,per_page=5,error_out=False)
     allcategories = Category.query.all()
     return render_template("index.html", posts=posts, categories=allcategories, category=category)
 
@@ -233,13 +239,6 @@ def add_post():
         #db.session.commit()
         categ = Category.query.all()
         return render_template("post_form.html", categories=categ)
-
-@app.route('/search', methods=["GET", "POST"])
-def search():
-    word = request.form.get("word")
-    posts = Post.query.filter(Post.content.contains(word)).all()
-    categories = Category.query.all()
-    return render_template("index.html", posts=posts, categories=categories, word=word)
 
 
 # Create a router for displaying a list of signed up users for an easy check
