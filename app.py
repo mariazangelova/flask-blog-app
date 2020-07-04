@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
-#app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 #app.config['SECRET_KEY'] = "secret key"
 
 #db = SQLAlchemy(app)
