@@ -10,15 +10,29 @@
             Why am I? Can add a description here...
           </p>
         </div>
+        <!-- <form action="/editprofile" method="post"> -->
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">{{user.email}}</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Vestibulum at eros</li>
+          <li class="list-group-item" id="email">{{user.email}}</li>
+          <li class="list-group-item" id="change-password">*********</li>
         </ul>
         <div class="card-body">
-          <a href="#" class="card-link">Change password</a>
-          <a href="#" class="card-link">Edit profile</a>
+          <button
+            onClick="changepassword()"
+            id="password-button"
+            class="btn btn-dark"
+            style="margin-bottom: 10px;"
+          >
+            Change Password
+          </button>
+          <button
+            onClick="changeemail()"
+            id="email-button"
+            class="btn btn-dark"
+          >
+            Change Email
+          </button>
         </div>
+        <!-- </form> -->
       </div>
     </div>
     <div class="col-md-8">

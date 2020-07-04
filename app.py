@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #app.config['SECRET_KEY'] = "secret key"
 
 #db = SQLAlchemy(app)
@@ -40,6 +40,10 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
 @app.route("/", methods=['GET'])
 @app.route('/posts')
@@ -75,10 +79,19 @@ def profile():
     allcategories = Category.query.all()
     return render_template("profile.html", user=user, posts=posts, categories=allcategories)
 
-@app.route("/about")
-def about():
+@app.route("/editprofile", methods=["POST"])
+def editprofile():
+    data = request.get_json("value")
+    user = User.query.filter_by(id=session.get("user_id")).first()
+    if data["type"] == "password":
+        new_password = data["value"]
+        new_hash = generate_password_hash(new_password)
+        user.password = new_hash
+    else: 
+        new_email = data["value"]
+        user.email = new_email
+    db.session.commit()
     return render_template("about.html")
-
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
