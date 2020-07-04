@@ -6,11 +6,8 @@
         <h5 class="card-header">My Profile</h5>
         <div class="card-body">
           <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
-          <p class="card-text">
-            Why am I? Can add a description here...
-          </p>
+          <p class="card-text"></p>
         </div>
-        <!-- <form action="/editprofile" method="post"> -->
         <ul class="list-group list-group-flush">
           <li class="list-group-item" id="email">{{user.email}}</li>
           <li class="list-group-item" id="change-password">*********</li>
@@ -24,6 +21,7 @@
           >
             Change Password
           </button>
+        </br>
           <button
             onClick="changeemail()"
             id="email-button"
@@ -32,7 +30,6 @@
             Change Email
           </button>
         </div>
-        <!-- </form> -->
       </div>
     </div>
     <div class="col-md-8">
