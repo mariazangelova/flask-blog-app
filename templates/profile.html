@@ -11,6 +11,9 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item" id="email">{{user.email}}</li>
           <li class="list-group-item" id="change-password">*********</li>
+          {% if error %}
+<li class="error"><strong>Error:</strong> {{ error }}</li>
+{% endif %}
         </ul>
         <div class="card-body">
           <button

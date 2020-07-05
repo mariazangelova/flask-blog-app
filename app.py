@@ -60,7 +60,6 @@ def search(page=1):
     word = request.form.get("word")
     posts = Post.query.filter(Post.content.contains(word)).paginate(page,per_page=5,error_out=False)
     categories = Category.query.all()
-    print(posts)
     return render_template("index.html", posts=posts, categories=categories, word=word)
 
 @app.route("/posts/<category>/<int:page>", methods=["GET", "POST"])
@@ -71,17 +70,20 @@ def categories(category, page=1):
     return render_template("index.html", posts=posts, categories=allcategories, category=category)
 
 @app.route("/myprofile", methods=["GET", "POST"])
+@login_required
 def profile():
     user_id = session.get("user_id")
     user = User.query.filter_by(id=user_id).first()
-    print(user)
     posts = Post.query.join(User).filter(Post.user.has(id=user_id)).order_by(desc(Post.date_posted))
     allcategories = Category.query.all()
     return render_template("profile.html", user=user, posts=posts, categories=allcategories)
 
 @app.route("/editprofile", methods=["POST"])
+@login_required
 def editprofile():
     data = request.get_json("value")
+    if not data["value"]:
+        return "Client error - no data", 400
     user = User.query.filter_by(id=session.get("user_id")).first()
     if data["type"] == "password":
         new_password = data["value"]
@@ -91,7 +93,7 @@ def editprofile():
         new_email = data["value"]
         user.email = new_email
     db.session.commit()
-    return render_template("about.html")
+    return "Profile edited successfully", 200
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -104,11 +106,11 @@ def login():
 
         # Ensure username was submitted
         if not request.form.get("email"):
-            print("No email")
+            return "No email", 400
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            print("No password")
+            return "No password", 400
 
         # Query database for username
         email=request.form.get("email")
@@ -160,28 +162,35 @@ def register():
         # Ensure username was submitted
         if not email:
             error = "Please provide an email"
-            return render_template("register.html", error=error)
+            raise ValueError(error)
         
-        # # Check is username is already taken
-        # is_new = "CHECK DATABASE"
-        # if is_new:
-        #     print("Not a new username")
+        # Check is email is already taken
+        is_new = User.query.filter_by(email=email).all()
+        print is_new
+        if is_new:
+            error = "This email has been already registered."
+            raise ValueError(error)
 
         # Ensure password was submitted
         if not password:
-            print("No passowrd")
+            error = "Please provide a password"
+            raise ValueError(error)
 
         # Check if password is long enough, has a letter and a number init
         elif len(password) < 5:
-            print("Password has less than 5 charecters.")
+            error = "Password must be at least 5 characters long."
+            raise ValueError(error)
         elif re.search('[0-9]', password) is None:
-            print("Passowrd must have a number.")
+            error = "Password must have a number."
+            raise ValueError(error)
         elif re.search('[A-Z]', password) is None:
-            print("Password must have at least one capital letter.")
+            error = "Password must have at least one capital letter."
+            raise ValueError(error)
 
         # Ensure the user writes correct password confirmation
         if not password == request.form.get("confirm_password"):
-            print("Passwords are not matching")
+            error = "Passwords do not match"
+            raise ValueError(error)
 
         # Hash the password
         hash = generate_password_hash(password)
@@ -190,19 +199,15 @@ def register():
         user = User(first_name=first_name, last_name=last_name, email=email, password=hash, registered=datetime.now(), posts=[])
         db.session.add(user)
         db.session.commit()
-      except:
-         error = "Something went wrong"
+        session["user_id"] = user.id
+        flash('You successfully signed up')
+        return redirect("/")
+      except ValueError as error:
          return render_template("register.html", error=error)
-      finally:
-         session["user_id"] = user.id
-         flash('You successfully signed up')
-         return redirect("/")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("register.html")
-
-
 
 @app.route('/post/<id>')
 @login_required
@@ -225,6 +230,7 @@ def delete_post(id):
 @login_required
 def add_post():
     if request.method == "POST":
+        error = None
         try:
             # Store post data
             title = request.form.get("title")
@@ -232,6 +238,10 @@ def add_post():
             content = request.form.get("content")
             author = session.get("user_id")
             cats = request.form.getlist("category")
+
+            if not title or not content:
+                error = "Post must have a title and some content."
+                raise ValueError(error)
 
             # Create a new post with categories
             post = Post(title=title, subtitle=subtitle, content=content, author=author, date_posted=datetime.now())
@@ -241,8 +251,7 @@ def add_post():
             for cat in cats:
                 db.session.connection().execute(categories_table.insert().values(post_id=post.id, category_id=cat))
             db.session.commit()
-        except:
-            error = "Something went wrong."
+        except ValueError as error:
             return render_template("post_form.html", error=error)
         author_data = User.query.filter_by(id=post.author).first()
         return render_template("post.html", post=post, author=author_data)
