@@ -263,15 +263,6 @@ def add_post():
         categ = Category.query.all()
         return render_template("post_form.html", categories=categ)
 
-
-# Create a router for displaying a list of signed up users for an easy check
-@app.route('/users')
-@login_required
-def users():
-    users = User.query.all()
-    print(users)
-    return render_template("list.html", users=users)
-
 if __name__ == '__main__':
    app.run(debug = True)
 
