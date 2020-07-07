@@ -166,7 +166,6 @@ def register():
         
         # Check is email is already taken
         is_new = User.query.filter_by(email=email).all()
-        print is_new
         if is_new:
             error = "This email has been already registered."
             raise ValueError(error)
@@ -264,5 +263,5 @@ def add_post():
         return render_template("post_form.html", categories=categ)
 
 if __name__ == '__main__':
-   app.run(debug = True)
+   app.run(debug = True, host='0.0.0.0')
 
