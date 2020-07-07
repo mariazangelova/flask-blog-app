@@ -1,3 +1,5 @@
 app.pyc
 helper.pyc
 models.pyc
+*.pyc
+docker-compose.yml

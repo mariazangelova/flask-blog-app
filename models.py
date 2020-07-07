@@ -43,6 +43,6 @@ categories_table = db.Table('categories', db.Model.metadata,
 
 if __name__ == "__main__":
 
-    print "Creating database tables..."
+    print("Creating database tables...")
     db.create_all()
-    print "Done!"
+    print("Done!")
