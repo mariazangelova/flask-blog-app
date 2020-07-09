@@ -1,3 +1,8 @@
+const url = "http://0.0.0.0:5000/editprofile";
+const xhr = new XMLHttpRequest();
+xhr.open("POST", url, true);
+// xhr.setRequestHeader("Content-Type", "application/json");
+
 function changepassword() {
   const button = document.getElementById("password-button");
   if (button.innerText === "Change Password") {
@@ -20,10 +25,6 @@ function changepassword() {
     input.replaceWith(text);
     button.innerHTML = "Change Password";
     button.className = "btn btn-dark";
-    const xhr = new XMLHttpRequest();
-    const url = "http://127.0.0.1:5000/editprofile";
-    xhr.open("POST", url, true);
-    // xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(
       JSON.stringify({
         value: input.value,
@@ -47,10 +48,6 @@ function changeemail() {
     text.replaceWith(input);
   } else {
     const input = document.getElementById("change-email");
-    const xhr = new XMLHttpRequest();
-    const url = "http://127.0.0.1:5000/editprofile";
-    xhr.open("POST", url, true);
-    // xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(
       JSON.stringify({
         value: input.value,
