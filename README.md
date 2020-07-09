@@ -14,7 +14,17 @@
 
 ## Technology
 
-### Python3, HTML5, Bootstrap, CSS
+### Python3, HTML5, Bootstrap, CSS, JavaScript
+### SQLAlchemy & SQLite
+
+| Tables        |
+| ------------- |
+| User          |
+| Post          |
+| Category      |
+| categories_table   |
+
+
 ### Flask & Docker
 
 Run the following command to create the docker image from current directory:
@@ -28,6 +38,3 @@ Run the docker container:
 docker run -p 5001:5000 -d blog-app
 ```
 Navigate to http://localhost:5001 in a browser to see the results.
-
-### SQLAlchemy & SQLite
-
