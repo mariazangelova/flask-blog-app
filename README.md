@@ -1,5 +1,7 @@
 # Blog
 
+[See deployed verion](http://mariazangelova.pythonanywhere.com/)
+
 ## Features
 
 * Registration & Login
